@@ -2,6 +2,10 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -29,13 +33,35 @@ public class LoginServlet extends HttpServlet{
 				out.println("<h2>Email : "+email+ "</h2>");
 				out.println("<h2>Gender : "+gender+ "</h2>");
 				out.println("<h2>Course : "+course+ "</h2>");
+				
+				
+
+				//JDBC
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/login","root","root");
+					PreparedStatement statement =connection.prepareStatement("insert into login values (?,?,?,?,?)");
+					statement.setString(1, name);
+					statement.setString(2, password);
+					statement.setString(3, email);
+					statement.setString(4, gender);
+					statement.setString(5, course);
+					statement.execute();
+					connection.close();
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
 			}
 			else{
 				out.println("<h2>You have Not Accepted the Conditions</h2>");
 			}
 			
 			
-			//JDBC
+			
 			
 		}
 }
